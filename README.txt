@@ -35,3 +35,8 @@ If you want to only rerun plotting (e.g. after modifying `plots.py`, you do not 
 run `plots.py` independently. But `main.py` will run it for you.
 
 My output from running `main.py` is included in the `output` directory in this repository.
+
+# Data Sources
+
+* https://archive.ics.uci.edu/ml/datasets/Adult
+* https://archive.ics.uci.edu/ml/datasets/Phishing+Websites
