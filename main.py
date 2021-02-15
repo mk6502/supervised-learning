@@ -43,12 +43,12 @@ def main():
         plt_clear()
         plt.figure(figsize=(30, 30))  # need a lot of room
         plot_tree(dtp, feature_names=df.columns)
-        plt.savefig(f"plots/{dataset}_dt_with_pruning.png")
+        plt.savefig(f"plots/{dataset}_dt_with_pruning.png", dpi=1000)
         plt_clear()
         print()
 
         # neural network:
-        print("===== Decision Tree (no pruning) =====")
+        print("===== Neural Network (defaults) =====")
         nn, nn_y_pred, nn_metrics_dict = neural_network_learner(X_train, y_train, X_test, y_test, random_state=RANDOM_STATE)
         print()
 

@@ -85,9 +85,9 @@ def neural_network_grid_search(X_train, y_train, X_test, y_test, random_state=12
     # some code taken from: https://www.ritchieng.com/machine-learning-efficiently-search-tuning-param/
     possible_activation = ["relu", "logistic"]
     possible_alpha = [0.0001, 0.00001, 0.001]
-    param_grid = {"activation": possible_activation, "alpha": possible_alpha, "random_state": [random_state]}
+    param_grid = {"activation": possible_activation, "alpha": possible_alpha}
 
-    nn = MLPClassifier()
+    nn = MLPClassifier(random_state=random_state)
 
     grid = GridSearchCV(nn, param_grid, cv=10, scoring="accuracy")  # 10 folds
     grid.fit(X_train, y_train)
