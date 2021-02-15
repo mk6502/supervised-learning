@@ -81,3 +81,17 @@ def accuracy_two_learners_bar_chart(combined_metrics_dict, test_size, metrics_di
     ax.set_title(title)
     plt.savefig(filename)
     plt_clear()
+
+
+def accuracy_vs_param_line_chart(x, y, x_label, y_label, title, filename):
+    """
+    Helper method to make line charts.
+    """
+    plt_clear()
+    fig, ax = plt.subplots()
+    plt.plot(x, y, grid=True, marker="o")
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
+    ax.set_title(title)
+    plt.savefig(filename)
+    plt_clear()

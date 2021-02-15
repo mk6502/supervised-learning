@@ -68,28 +68,98 @@ def main():
             combined_metrics_dict[test_size]["nn_metrics_dict"] = nn_metrics_dict
             print()
 
+            # neural network with max_iter=50:
+            print("===== Neural Network (max_iter=50)... =====")
+            nn50, nn50_y_pred, nn50_metrics_dict = neural_network_learner(X_train, y_train, X_test, y_test, random_state=RANDOM_STATE, max_iter=50)
+            combined_metrics_dict[test_size]["nn50_metrics_dict"] = nn50_metrics_dict
+            print()
+
+            # neural network with max_iter=100:
+            print("===== Neural Network (max_iter=100)... =====")
+            nn100, nn100_y_pred, nn100_metrics_dict = neural_network_learner(X_train, y_train, X_test, y_test, random_state=RANDOM_STATE, max_iter=100)
+            combined_metrics_dict[test_size]["nn100_metrics_dict"] = nn100_metrics_dict
+            print()
+
+            # neural network with max_iter=200:
+            print("===== Neural Network (max_iter=200)... =====")
+            combined_metrics_dict[test_size]["nn200_metrics_dict"] = nn_metrics_dict  # this is the default
+            print()
+
+            # neural network with max_iter=500:
+            print("===== Neural Network (max_iter=500)... =====")
+            nn500, nn500_y_pred, nn500_metrics_dict = neural_network_learner(X_train, y_train, X_test, y_test, random_state=RANDOM_STATE, max_iter=500)
+            combined_metrics_dict[test_size]["nn500_metrics_dict"] = nn500_metrics_dict
+            print()
+
             # neural network grid search for some hyperparameters:
             print("===== Neural Network (grid search for hyperparameters)... =====")
             opt_nn, opt_nn_y_pred, opt_nn_metrics_dict = neural_network_grid_search(X_train, y_train, X_test, y_test, random_state=RANDOM_STATE)
             combined_metrics_dict[test_size]["opt_nn_metrics_dict"] = opt_nn_metrics_dict
             print()
 
-            # boosting:
+            # AdaBoost:
             print("===== AdaBoost (defaults)... =====")
             ab, ab_y_pred, ab_metrics_dict = adaboost_learner(X_train, y_train, X_test, y_test, random_state=RANDOM_STATE)
             combined_metrics_dict[test_size]["ab_metrics_dict"] = ab_metrics_dict
             print()
 
-            # boosting grid search to find optimal n_estimator:
-            print("===== AdaBoost (grid search for n_estimator)... =====")
+            # AdaBoost with n_estimators=10:
+            print("===== AdaBoost (n_estimators=10)... =====")
+            ab10, ab10_y_pred, ab10_metrics_dict = adaboost_learner(X_train, y_train, X_test, y_test, random_state=RANDOM_STATE, n_estimators=10)
+            combined_metrics_dict[test_size]["ab10_metrics_dict"] = ab10_metrics_dict
+            print()
+
+            # AdaBoost with n_estimators=50:
+            print("===== AdaBoost (n_estimators=50)... =====")
+            combined_metrics_dict[test_size]["ab50_metrics_dict"] = ab_metrics_dict  # default is 50
+            print()
+
+            # AdaBoost with n_estimators=100:
+            print("===== AdaBoost (n_estimators=100)... =====")
+            ab100, ab100_y_pred, ab100_metrics_dict = adaboost_learner(X_train, y_train, X_test, y_test, random_state=RANDOM_STATE, n_estimators=100)
+            combined_metrics_dict[test_size]["ab100_metrics_dict"] = ab100_metrics_dict
+            print()
+
+            # AdaBoost with n_estimators=200:
+            print("===== AdaBoost (n_estimators=200)... =====")
+            ab200, ab200_y_pred, ab200_metrics_dict = adaboost_learner(X_train, y_train, X_test, y_test, random_state=RANDOM_STATE, n_estimators=200)
+            combined_metrics_dict[test_size]["ab200_metrics_dict"] = ab200_metrics_dict
+            print()
+
+            # AdaBoost grid search to find optimal n_estimator:
+            print("===== AdaBoost (grid search for n_estimators)... =====")
             opt_ab, opt_ab_y_pred, opt_ab_metrics_dict = adaboost_grid_search(X_train, y_train, X_test, y_test, random_state=RANDOM_STATE)
             combined_metrics_dict[test_size]["opt_ab_metrics_dict"] = opt_ab_metrics_dict
             print()
 
-            # SVM (polynomial kernel):
-            print("===== SVM (polynomial kernel)... =====")
-            svm, svm_y_pred, svm_metrics_dict = svm_learner(X_train, y_train, X_test, y_test, kernel="poly", random_state=RANDOM_STATE)
+            # SVM (default rbf kernel):
+            print("===== SVM (default rbf kernel)... =====")
+            svm, svm_y_pred, svm_metrics_dict = svm_learner(X_train, y_train, X_test, y_test, kernel="rbf", random_state=RANDOM_STATE)
             combined_metrics_dict[test_size]["svm_metrics_dict"] = svm_metrics_dict
+            print()
+
+            # SVM (default rbf kernel) with max_iter=10:
+            print("===== SVM (default rbf kernel and max_iter=10)... =====")
+            svm10, svm10_y_pred, svm10_metrics_dict = svm_learner(X_train, y_train, X_test, y_test, kernel="rbf", random_state=RANDOM_STATE, max_iter=10)
+            combined_metrics_dict[test_size]["svm10_metrics_dict"] = svm10_metrics_dict
+            print()
+
+            # SVM (default rbf kernel) with max_iter=10:
+            print("===== SVM (default rbf kernel and max_iter=20)... =====")
+            svm20, svm20_y_pred, svm20_metrics_dict = svm_learner(X_train, y_train, X_test, y_test, kernel="rbf", random_state=RANDOM_STATE, max_iter=20)
+            combined_metrics_dict[test_size]["svm20_metrics_dict"] = svm20_metrics_dict
+            print()
+
+            # SVM (default rbf kernel) with max_iter=50:
+            print("===== SVM (default rbf kernel and max_iter=50)... =====")
+            svm50, svm50_y_pred, svm50_metrics_dict = svm_learner(X_train, y_train, X_test, y_test, kernel="rbf", random_state=RANDOM_STATE, max_iter=50)
+            combined_metrics_dict[test_size]["svm50_metrics_dict"] = svm50_metrics_dict
+            print()
+
+            # SVM (default rbf kernel) with max_iter=100:
+            print("===== SVM (default rbf kernel and max_iter=100)... =====")
+            svm100, svm100_y_pred, svm100_metrics_dict = svm_learner(X_train, y_train, X_test, y_test, kernel="rbf", random_state=RANDOM_STATE, max_iter=100)
+            combined_metrics_dict[test_size]["svm100_metrics_dict"] = svm100_metrics_dict
             print()
 
             # SVM (sigmoid kernel):

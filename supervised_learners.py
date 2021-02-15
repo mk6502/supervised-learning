@@ -13,8 +13,8 @@ from utils import plt_clear
 def basic_metrics(y_test, y_pred):
     d = dict()
     d["acc"] = metrics.accuracy_score(y_test, y_pred)
-    d["fpr"], d["tpr"], d["thresholds"] = metrics.roc_curve(y_test, y_pred)
-    d["auc"] = metrics.auc(d["fpr"], d["tpr"])
+    fpr, tpr, thresholds = metrics.roc_curve(y_test, y_pred)
+    d["auc"] = metrics.auc(fpr, tpr)
     print(f"Accuracy: {d['acc']}")
     print(f"AUC: {d['auc']}")
     return d
@@ -55,12 +55,12 @@ def decision_tree_grid_search(X_train, y_train, X_test, y_test):
     return decision_tree_learner(X_train, y_train, X_test, y_test, max_depth=optimal_max_depth)
 
 
-def neural_network_learner(X_train, y_train, X_test, y_test, random_state=123, activation="relu", alpha=0.0001):
+def neural_network_learner(X_train, y_train, X_test, y_test, random_state=123, activation="relu", alpha=0.0001, max_iter=200):
     """
     Neural network classifier.
     """
     # Fit to training data:
-    nn = MLPClassifier(random_state=random_state, activation=activation, alpha=alpha)
+    nn = MLPClassifier(random_state=random_state, activation=activation, alpha=alpha, max_iter=max_iter)
     nn.fit(X_train, y_train)
 
     # Predict:
@@ -91,7 +91,7 @@ def neural_network_grid_search(X_train, y_train, X_test, y_test, random_state=12
     return neural_network_learner(X_train, y_train, X_test, y_test, random_state=random_state, activation=optimal_activation, alpha=optimal_alpha)
 
 
-def adaboost_learner(X_train, y_train, X_test, y_test, n_estimators=1000, random_state=123):
+def adaboost_learner(X_train, y_train, X_test, y_test, n_estimators=50, random_state=123):
     # Fit to training data:
     ada = AdaBoostClassifier(n_estimators=n_estimators, random_state=random_state)
     ada.fit(X_train, y_train)
@@ -108,7 +108,7 @@ def adaboost_learner(X_train, y_train, X_test, y_test, n_estimators=1000, random
 
 def adaboost_grid_search(X_train, y_train, X_test, y_test, random_state=123):
     # some code taken from: https://www.ritchieng.com/machine-learning-efficiently-search-tuning-param/
-    possible_n_estimators = [100, 250, 1000]
+    possible_n_estimators = [10, 50, 100, 200]
     param_grid = {"n_estimators": possible_n_estimators}
 
     ada = AdaBoostClassifier(random_state=random_state)
@@ -122,9 +122,9 @@ def adaboost_grid_search(X_train, y_train, X_test, y_test, random_state=123):
     return adaboost_learner(X_train, y_train, X_test, y_test, random_state=random_state, n_estimators=optimal_n_estimators)
 
 
-def svm_learner(X_train, y_train, X_test, y_test, kernel="polynomial", random_state=123):
+def svm_learner(X_train, y_train, X_test, y_test, kernel="rbf", random_state=123, max_iter=-1):
     # Fit to training data:
-    svm = SVC(kernel=kernel, random_state=random_state)
+    svm = SVC(kernel=kernel, random_state=random_state, max_iter=max_iter)
     svm.fit(X_train, y_train)
 
     # Predict:
