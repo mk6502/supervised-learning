@@ -13,10 +13,24 @@ Install required packages (standard scientific Python packages) with:
 
     pip install -r requirements.txt
 
-Run the code with:
+There are two components: `main.py` and `plots.py`.
+
+`main.py` will run everything.
+
+This will run for somewhere on the order of 30-60 minutes depending on the hardware.
+All learners, hyperparameter grid search, and plotting all happens by running `main.py`.
+Plots are output to the `plots` directory. Various metrics are printed to the console.
+
+Since training takes a long time, some plotting is broken out into a separate `plots.py` file which uses output from a
+previous run of `main.py` to generate plots.
+
+This file *is* called by `main.py` so you do NOT need to run it manually after running `main.py`.
+
+In summary: run the code with:
 
     python main.py
 
-This will run for somewhere on the order of 15-60 minutes depending on the hardware.
-All learners, hyperparameter grid search, and plotting all happens by running `main.py`.
-Plots are output to the `plots` directory. Various metrics are printed to the console.
+If you want to only rerun plotting (e.g. after modifying `plots.py`, you do not need to run all of `main.py` - you can
+run `plots.py` independently. But `main.py` will run it for you.
+
+My output from running `main.py` is included in the `output` directory in this repository.
