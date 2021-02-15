@@ -15,10 +15,21 @@ RANDOM_STATE = 123
 np.random.seed(RANDOM_STATE)
 
 
+def make_beautiful_plots(dataset, combined_metrics_dict):
+    """
+    Make plots used in the paper. `combined_metrics_dict` is for a single dataset.
+    """
+    test_sizes = list(combined_metrics_dict.keys())  # [0.1, 0.2]
+
+    # TODO: RMSE vs. amount of training (test) data for each test_size
+    # TODO: RMSE vs. number of iterations
+    # TODO: RMSE when using default parameters vs. grid search
+    pass
+
+
 def main():
     for dataset in ["adult", "phishing"]:
-        print(f"running for dataset: {dataset}")
-
+        print(f"===== Running for dataset={dataset}... =====")
         df, X, y = get_dataset(dataset)
 
         # encode X into float for sklearn:
@@ -26,67 +37,88 @@ def main():
         encoder_X.fit(X)
         X_encoded = encoder_X.transform(X)
 
-        # same train-test split for all learners:
-        X_train, X_test, y_train, y_test = train_test_split(X_encoded, y, test_size=0.20, random_state=RANDOM_STATE)
+        combined_metrics_dict = dict()  # all metrics for plotting this dataset
+        for test_size in [0.1, 0.2]:
+            combined_metrics_dict[test_size] = dict()  # 2-dimensional dict
+            print(f"===== Running for test_size={test_size}... =====")
 
-        # decision tree (no pruning):
-        print("===== Decision Tree (no pruning) =====")
-        dt, dt_y_pred, dt_metrics_dict = decision_tree_learner(X_train, y_train, X_test, y_test, max_depth=None)
-        print()
+            # same train-test split for all learners:
+            X_train, X_test, y_train, y_test = train_test_split(X_encoded, y, test_size=test_size, random_state=RANDOM_STATE)
 
-        # decision tree (with hyperparameter grid search to find max_depth for pruning):
-        print("===== Decision Tree (gridsearch for max_depth for pruning) =====")
-        dtp, dtp_y_pred, dtp_metrics_dict = decision_tree_grid_search(X_train, y_train, X_test, y_test)
-        print()
+            # decision tree (no pruning):
+            print("===== Decision Tree (no pruning)... =====")
+            dt, dt_y_pred, dt_metrics_dict = decision_tree_learner(X_train, y_train, X_test, y_test, max_depth=None)
+            combined_metrics_dict[test_size]["dt_metrics_dict"] = dt_metrics_dict
+            print()
 
-        print(f"===== exporting plots/{dataset}_dt_with_pruning.png =====")
-        plt_clear()
-        plt.figure(figsize=(30, 30))  # need a lot of room
-        plot_tree(dtp, feature_names=df.columns)
-        plt.savefig(f"plots/{dataset}_dt_with_pruning.png", dpi=1000)
-        plt_clear()
-        print()
+            # decision tree (with hyperparameter grid search to find max_depth for pruning):
+            print("===== Decision Tree (gridsearch for max_depth for pruning)... =====")
+            dtp, dtp_y_pred, dtp_metrics_dict = decision_tree_grid_search(X_train, y_train, X_test, y_test)
+            combined_metrics_dict[test_size]["dtp_metrics_dict"] = dtp_metrics_dict
+            print()
 
-        # neural network:
-        print("===== Neural Network (defaults) =====")
-        nn, nn_y_pred, nn_metrics_dict = neural_network_learner(X_train, y_train, X_test, y_test, random_state=RANDOM_STATE)
-        print()
+            # export a mostly-useless plot to show complexity of the pruned tree:
+            print(f"===== exporting plots/{dataset}_{test_size}_dt_with_pruning.png... =====")
+            plt_clear()
+            plt.figure(figsize=(30, 30))  # need a lot of room
+            plot_tree(dtp, feature_names=df.columns)
+            plt.savefig(f"plots/{dataset}_{test_size}_dt_with_pruning.png")
+            plt_clear()
+            print()
 
-        # neural network grid search for some hyperparameters:
-        print("===== Neural Network (grid search for hyperparameters) =====")
-        opt_nn, opt_nn_y_pred, opt_nn_metrics_dict = neural_network_grid_search(X_train, y_train, X_test, y_test, random_state=RANDOM_STATE)
-        print()
+            # neural network:
+            print("===== Neural Network (defaults)... =====")
+            nn, nn_y_pred, nn_metrics_dict = neural_network_learner(X_train, y_train, X_test, y_test, random_state=RANDOM_STATE)
+            combined_metrics_dict[test_size]["nn_metrics_dict"] = nn_metrics_dict
+            print()
 
-        # boosting:
-        print("===== AdaBoost (defaults) =====")
-        ab, ab_y_pred, ab_metrics_dict = adaboost_learner(X_train, y_train, X_test, y_test, random_state=RANDOM_STATE)
-        print()
+            # neural network grid search for some hyperparameters:
+            print("===== Neural Network (grid search for hyperparameters)... =====")
+            opt_nn, opt_nn_y_pred, opt_nn_metrics_dict = neural_network_grid_search(X_train, y_train, X_test, y_test, random_state=RANDOM_STATE)
+            combined_metrics_dict[test_size]["opt_nn_metrics_dict"] = opt_nn_metrics_dict
+            print()
 
-        # boosting grid search to find optimal n_estimator:
-        print("===== AdaBoost (grid search for n_estimator) =====")
-        opt_ab, opt_ab_y_pred, opt_ab_metrics_dict = adaboost_grid_search(X_train, y_train, X_test, y_test, random_state=RANDOM_STATE)
-        print()
+            # boosting:
+            print("===== AdaBoost (defaults)... =====")
+            ab, ab_y_pred, ab_metrics_dict = adaboost_learner(X_train, y_train, X_test, y_test, random_state=RANDOM_STATE)
+            combined_metrics_dict[test_size]["ab_metrics_dict"] = ab_metrics_dict
+            print()
 
-        # SVM (polynomial kernel):
-        print("===== SVM (polynomial kernel) =====")
-        svm, svm_y_pred, svm_metrics_dict = svm_learner(X_train, y_train, X_test, y_test, kernel="poly", random_state=RANDOM_STATE)
-        print()
+            # boosting grid search to find optimal n_estimator:
+            print("===== AdaBoost (grid search for n_estimator)... =====")
+            opt_ab, opt_ab_y_pred, opt_ab_metrics_dict = adaboost_grid_search(X_train, y_train, X_test, y_test, random_state=RANDOM_STATE)
+            combined_metrics_dict[test_size]["opt_ab_metrics_dict"] = opt_ab_metrics_dict
+            print()
 
-        # SVM (sigmoid kernel):
-        print("===== SVM (sigmoid kernel) =====")
-        svm_sigmoid, svm_sigmoid_y_pred, svm_sigmoid_metrics_dict = \
-            svm_learner(X_train, y_train, X_test, y_test, kernel="sigmoid", random_state=RANDOM_STATE)
-        print()
+            # SVM (polynomial kernel):
+            print("===== SVM (polynomial kernel)... =====")
+            svm, svm_y_pred, svm_metrics_dict = svm_learner(X_train, y_train, X_test, y_test, kernel="poly", random_state=RANDOM_STATE)
+            combined_metrics_dict[test_size]["svm_metrics_dict"] = svm_metrics_dict
+            print()
 
-        # KNN:
-        print("===== KNN (defaults) =====")
-        knn, knn_y_pred, knn_metrics_dict = knn_learner(X_train, y_train, X_test, y_test)
-        print()
+            # SVM (sigmoid kernel):
+            print("===== SVM (sigmoid kernel)... =====")
+            svm_sigmoid, svm_sigmoid_y_pred, svm_sigmoid_metrics_dict = svm_learner(X_train, y_train, X_test, y_test, kernel="sigmoid", random_state=RANDOM_STATE)
+            combined_metrics_dict[test_size]["svm_sigmoid_metrics_dict"] = svm_sigmoid_metrics_dict
+            print()
 
-        # KNN search for optimal value of K:
-        print("===== KNN (grid search for K) =====")
-        opt_knn, opt_knn_y_pred, opt_knn_metrics_dict = knn_grid_search(X_train, y_train, X_test, y_test, fig_filename=f"plots/{dataset}_knn_gridsearch.png")
-        print()
+            # KNN:
+            print("===== KNN (defaults)... =====")
+            knn, knn_y_pred, knn_metrics_dict = knn_learner(X_train, y_train, X_test, y_test)
+            combined_metrics_dict[test_size]["knn_metrics_dict"] = knn_metrics_dict
+            print()
+
+            # KNN search for optimal value of K:
+            print("===== KNN (grid search for K)... =====")
+            opt_knn, opt_knn_y_pred, opt_knn_metrics_dict = knn_grid_search(X_train, y_train, X_test, y_test, fig_filename=f"plots/{dataset}_{test_size}_knn_gridsearch.png")
+            combined_metrics_dict[test_size]["opt_knn_metrics_dict"] = opt_knn_metrics_dict
+            print()
+
+            print(f"===== finished test_size={test_size}! =====")
+
+        # make plots used in the paper:
+        print("===== Making plots... =====")
+        make_beautiful_plots(dataset, combined_metrics_dict)
 
         print(f"===== finished dataset: {dataset} =====")
 
