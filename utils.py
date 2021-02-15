@@ -47,3 +47,19 @@ def plt_clear():
     plt.clf()
     plt.cla()
     plt.close()
+
+
+def accuracy_test_size_bar_charts(combined_metrics_dict, metrics_dict_name, test_sizes, title, filename):
+    """
+    Helper method to make bar charts of accuracy for test sizes.
+    """
+    plt_clear()
+    fig = plt.figure()
+    ax = fig.add_axes([0, 0, 1, 1])
+    y_axis = [combined_metrics_dict[test_sizes[0]][metrics_dict_name]["acc"], combined_metrics_dict[test_sizes[1]][metrics_dict_name]["acc"]]
+    ax.bar(test_sizes, y_axis)
+    ax.set_xlabel("Test Ratio")
+    ax.set_ylabel("Accuracy")
+    ax.set_title(title)
+    plt.savefig(filename)
+    plt_clear()

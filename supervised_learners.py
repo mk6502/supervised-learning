@@ -15,16 +15,8 @@ def basic_metrics(y_test, y_pred):
     d["acc"] = metrics.accuracy_score(y_test, y_pred)
     d["fpr"], d["tpr"], d["thresholds"] = metrics.roc_curve(y_test, y_pred)
     d["auc"] = metrics.auc(d["fpr"], d["tpr"])
-    # d["precision"] = metrics.precision_score(y_test, y_pred)
-    # d["recall"] = metrics.recall_score(y_test, y_pred)
-    # d["average_precision"] = metrics.average_precision_score(y_test, y_pred)
-    d["rmse"] = metrics.mean_squared_error(y_test, y_pred, squared=False)
     print(f"Accuracy: {d['acc']}")
     print(f"AUC: {d['auc']}")
-    # print(f"Precision: {d['precision']}")
-    # print(f"Recall: {d['recall']}")
-    # print(f"Average Precision: {d['average_precision']}")
-    print(f"RMSE: {d['rmse']}")
     return d
 
 
