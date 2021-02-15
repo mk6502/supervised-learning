@@ -1,3 +1,7 @@
+"""
+This file is used to train and test various supervised learners. It also generates all plots used in the paper.
+"""
+import json
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -5,7 +9,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.tree import plot_tree
 
-from utils import get_dataset, plt_clear, accuracy_test_size_bar_charts
+from plots import generate_plots
+from utils import get_dataset, plt_clear
 from supervised_learners import decision_tree_learner, decision_tree_grid_search, neural_network_learner, \
     neural_network_grid_search, adaboost_learner, adaboost_grid_search, svm_learner, knn_learner, knn_grid_search
 
@@ -15,33 +20,10 @@ RANDOM_STATE = 123
 np.random.seed(RANDOM_STATE)
 
 
-def make_beautiful_plots(dataset, combined_metrics_dict):
-    """
-    Make plots used in the paper. `combined_metrics_dict` is for a single dataset.
-    """
-    test_sizes = list(combined_metrics_dict.keys())  # [0.1, 0.2]
-
-    # Accuracy for both test_sizes for pruned decision tree:
-    accuracy_test_size_bar_charts(combined_metrics_dict, "dtp_metrics_dict", test_sizes, "Pruned Decision Tree Accuracy with different test sizes", f"plots/{dataset}_dtp_test_size_acc.png")
-
-    # Accuracy for both test_sizes for (default parameter) NN:
-    accuracy_test_size_bar_charts(combined_metrics_dict, "nn_metrics_dict", test_sizes, "Neural Network Accuracy with different test sizes", f"plots/{dataset}_nn_test_size_acc.png")
-
-    # Accuracy for both test_sizes for (default parameter) AdaBoost:
-    accuracy_test_size_bar_charts(combined_metrics_dict, "ab_metrics_dict", test_sizes, "AdaBoost Accuracy with different test sizes", f"plots/{dataset}_ab_test_size_acc.png")
-
-    # Accuracy for both test_sizes for (default parameter) AdaBoost:
-    accuracy_test_size_bar_charts(combined_metrics_dict, "svm_metrics_dict", test_sizes, "SVM Accuracy with different test sizes", f"plots/{dataset}_svm_test_size_acc.png")
-
-    # Accuracy for both test_sizes for (default parameter) AdaBoost:
-    accuracy_test_size_bar_charts(combined_metrics_dict, "knn_metrics_dict", test_sizes, "KNN Accuracy with different test sizes", f"plots/{dataset}_knn_test_size_acc.png")
-
-    # TODO: Accuracy vs. number of iterations
-    # TODO: Accuracy when using default parameters vs. grid search
-    pass
-
-
 def main():
+    """
+    Main method that does all the training, hyperparameter tuning, metrics calculations, and plotting.
+    """
     for dataset in ["adult", "phishing"]:
         print(f"===== Running for dataset={dataset}... =====")
         df, X, y = get_dataset(dataset)
@@ -130,13 +112,15 @@ def main():
 
             print(f"===== finished test_size={test_size}! =====")
 
-        # make plots used in the paper:
-        print("===== Making plots... =====")
-        make_beautiful_plots(dataset, combined_metrics_dict)
+        # export combined_metrics_dict to JSON for out-of-band exploration:
+        with open(f"output/{dataset}_combined_metrics_dict.json", "w+") as f:
+            json.dump(combined_metrics_dict, f)
 
         print(f"===== finished dataset: {dataset} =====")
 
-    print("DONE!")
+    # make plots used in the paper:
+    print("===== Done with learners, generating plots... =====")
+    generate_plots()
 
 
 if __name__ == "__main__":

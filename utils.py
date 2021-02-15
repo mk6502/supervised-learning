@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -49,15 +50,32 @@ def plt_clear():
     plt.close()
 
 
-def accuracy_test_size_bar_charts(combined_metrics_dict, metrics_dict_name, test_sizes, title, filename):
+def accuracy_test_size_bar_chart(combined_metrics_dict, metrics_dict_name, test_sizes, title, filename):
     """
     Helper method to make bar charts of accuracy for test sizes.
+    Based on: https://matplotlib.org/3.1.1/gallery/ticks_and_spines/custom_ticker1.html#sphx-glr-gallery-ticks-and-spines-custom-ticker1-py
     """
     plt_clear()
-    fig = plt.figure()
-    ax = fig.add_axes([0, 0, 1, 1])
+    fig, ax = plt.subplots()
+    x = np.arange(2)
     y_axis = [combined_metrics_dict[test_sizes[0]][metrics_dict_name]["acc"], combined_metrics_dict[test_sizes[1]][metrics_dict_name]["acc"]]
-    ax.bar(test_sizes, y_axis)
+    plt.bar(test_sizes, y_axis)
+    ax.set_xlabel("Test Ratio")
+    ax.set_ylabel("Accuracy")
+    ax.set_title(title)
+    plt.savefig(filename)
+    plt_clear()
+
+
+def accuracy_two_learners_bar_chart(combined_metrics_dict, test_size, metrics_dict_name_1, metrics_dict_name_2, learner_name_1, learner_name_2, title, filename):
+    """
+    Helper method to make bar charts of accuracy between two learners.
+    """
+    plt_clear()
+    fig, ax = plt.subplots()
+    x = [learner_name_1, learner_name_2]
+    y_axis = [combined_metrics_dict[test_size][metrics_dict_name_1]["acc"], combined_metrics_dict[test_size][metrics_dict_name_2]["acc"]]
+    plt.bar(x, y_axis)
     ax.set_xlabel("Test Ratio")
     ax.set_ylabel("Accuracy")
     ax.set_title(title)
