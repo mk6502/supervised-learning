@@ -11,18 +11,21 @@ from utils import plt_clear
 
 
 def basic_metrics(y_test, y_pred):
-    acc = metrics.accuracy_score(y_test, y_pred)
-    fpr, tpr, thresholds = metrics.roc_curve(y_test, y_pred)
-    auc = metrics.auc(fpr, tpr)
-    precision = metrics.precision_score(y_test, y_pred)
-    recall = metrics.recall_score(y_test, y_pred)
-    average_precision = metrics.average_precision_score(y_test, y_pred)
-    print(f"Accuracy: {acc}")
-    print(f"AUC: {auc}")
-    print(f"Precision: {precision}")
-    print(f"Recall: {recall}")
-    print(f"Average Precision: {average_precision}")
-    return acc, fpr, tpr, thresholds, auc, precision, recall, average_precision
+    d = dict()
+    d["acc"] = metrics.accuracy_score(y_test, y_pred)
+    d["fpr"], d["tpr"], d["thresholds"] = metrics.roc_curve(y_test, y_pred)
+    d["auc"] = metrics.auc(d["fpr"], d["tpr"])
+    # d["precision"] = metrics.precision_score(y_test, y_pred)
+    # d["recall"] = metrics.recall_score(y_test, y_pred)
+    # d["average_precision"] = metrics.average_precision_score(y_test, y_pred)
+    d["rmse"] = metrics.mean_squared_error(y_test, y_pred, squared=False)
+    print(f"Accuracy: {d['acc']}")
+    print(f"AUC: {d['auc']}")
+    # print(f"Precision: {d['precision']}")
+    # print(f"Recall: {d['recall']}")
+    # print(f"Average Precision: {d['average_precision']}")
+    print(f"RMSE: {d['rmse']}")
+    return d
 
 
 def decision_tree_learner(X_train, y_train, X_test, y_test, max_depth=None):
@@ -39,13 +42,25 @@ def decision_tree_learner(X_train, y_train, X_test, y_test, max_depth=None):
     else:
         print("DT Learning with no max_depth:")
 
-    dt_acc, dt_fpr, dt_tpr, dt_thresholds, dt_auc, dt_precision, dt_recall, dt_average_precision = basic_metrics(y_test, y_pred)
+    metrics_dict = basic_metrics(y_test, y_pred)
 
-    # Precision-Recall Curve (from https://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html#plot-the-precision-recall-curve)
-    # disp = metrics.plot_precision_recall_curve(dt, X_test, y_test)
-    # disp.ax_.set_title('2-class Precision-Recall curve: AP={0:0.2f}'.format(dt_average_precision))
+    return dt, y_pred, metrics_dict
 
-    return dt, y_pred, dt_acc, dt_fpr, dt_tpr, dt_thresholds, dt_auc, dt_precision, dt_recall, dt_average_precision
+
+def decision_tree_grid_search(X_train, y_train, X_test, y_test):
+    # some code taken from: https://www.ritchieng.com/machine-learning-efficiently-search-tuning-param/
+    possible_max_depth = [1, 5, 10, 25, 100]
+    param_grid = {"max_depth": possible_max_depth}
+
+    dt = DecisionTreeClassifier()
+
+    grid = GridSearchCV(dt, param_grid, cv=10, scoring="accuracy")  # 10 folds
+    grid.fit(X_train, y_train)
+
+    optimal_max_depth = grid.best_params_["max_depth"]
+    print(f"Optimal max_depth={optimal_max_depth}")
+
+    return decision_tree_learner(X_train, y_train, X_test, y_test, max_depth=optimal_max_depth)
 
 
 def neural_network_learner(X_train, y_train, X_test, y_test, random_state=123, activation="relu", alpha=0.0001):
@@ -61,9 +76,9 @@ def neural_network_learner(X_train, y_train, X_test, y_test, random_state=123, a
 
     # Stats:
     print(f"NN Learner with activation={activation} and alpha={alpha}:")
-    nn_acc, nn_fpr, nn_tpr, nn_thresholds, nn_auc, nn_precision, nn_recall, nn_average_precision = basic_metrics(y_test, y_pred)
+    metrics_dict = basic_metrics(y_test, y_pred)
 
-    return nn, y_pred, nn_acc, nn_fpr, nn_tpr, nn_thresholds, nn_auc, nn_precision, nn_recall, nn_average_precision
+    return nn, y_pred, metrics_dict
 
 
 def neural_network_grid_search(X_train, y_train, X_test, y_test, random_state=123):
@@ -94,9 +109,9 @@ def adaboost_learner(X_train, y_train, X_test, y_test, n_estimators=1000, random
 
     # Stats:
     print(f"AdaBoost Learner with n_estimators={n_estimators}:")
-    ada_acc, ada_fpr, ada_tpr, ada_thresholds, ada_auc, ada_precision, ada_recall, ada_average_precision = basic_metrics(y_test, y_pred)
+    metrics_dict = basic_metrics(y_test, y_pred)
 
-    return ada, y_pred, ada_acc, ada_fpr, ada_tpr, ada_thresholds, ada_auc, ada_precision, ada_recall, ada_average_precision
+    return ada, y_pred, metrics_dict
 
 
 def adaboost_grid_search(X_train, y_train, X_test, y_test, random_state=123):
@@ -125,10 +140,9 @@ def svm_learner(X_train, y_train, X_test, y_test, kernel="polynomial", random_st
 
     # Stats:
     print(f"SVM Learner with kernel={kernel}:")
-    svm_acc, svm_fpr, svm_tpr, svm_thresholds, svm_auc, svm_precision, svm_recall, svm_average_precision = basic_metrics(
-        y_test, y_pred)
+    metrics_dict = basic_metrics(y_test, y_pred)
 
-    return svm, y_pred, svm_acc, svm_fpr, svm_tpr, svm_thresholds, svm_auc, svm_precision, svm_recall, svm_average_precision
+    return svm, y_pred, metrics_dict
 
 
 def knn_learner(X_train, y_train, X_test, y_test, n_neighbors=5):
@@ -141,9 +155,9 @@ def knn_learner(X_train, y_train, X_test, y_test, n_neighbors=5):
 
     # Stats:
     print(f"KNN Learner with n_neighbors={n_neighbors}:")
-    knn_acc, knn_fpr, knn_tpr, knn_thresholds, knn_auc, knn_precision, knn_recall, knn_average_precision = basic_metrics(y_test, y_pred)
+    metrics_dict = basic_metrics(y_test, y_pred)
 
-    return knn, y_pred, knn_acc, knn_fpr, knn_tpr, knn_thresholds, knn_auc, knn_precision, knn_recall, knn_average_precision
+    return knn, y_pred, metrics_dict
 
 
 def knn_grid_search(X_train, y_train, X_test, y_test, fig_filename):
