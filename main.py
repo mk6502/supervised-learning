@@ -24,7 +24,7 @@ def main():
     """
     Main method that does all the training, hyperparameter tuning, metrics calculations, and plotting.
     """
-    for dataset in ["adult", "phishing"]:
+    for dataset in ["census", "phishing"]:
         print(f"===== Running for dataset={dataset}... =====")
         df, X, y = get_dataset(dataset)
 

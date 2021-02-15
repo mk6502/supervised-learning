@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-def get_data_adult_census():
+def get_data_census():
     """
     Return cleaned adult census data in a dataframe, then also X (attributes) and y (classification).
     """
@@ -33,8 +33,8 @@ def get_data_phishing():
 
 
 def get_dataset(dataset_name):
-    if dataset_name == "adult":
-        return get_data_adult_census()
+    if dataset_name == "census":
+        return get_data_census()
     elif dataset_name == "phishing":
         return get_data_phishing()
     else:

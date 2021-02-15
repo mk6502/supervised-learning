@@ -53,7 +53,7 @@ def generate_plots():
     """
     Main method for this file.
     """
-    for dataset in ["adult", "phishing"]:
+    for dataset in ["census", "phishing"]:
         try:
             with open(f"output/{dataset}_combined_metrics_dict.json") as f:
                 combined_metrics_dict = json.load(f)
