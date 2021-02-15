@@ -165,10 +165,11 @@ def knn_grid_search(X_train, y_train, X_test, y_test, fig_filename):
     optimal_k = grid.best_params_["n_neighbors"]
     grid_mean_scores = [x for x in grid.cv_results_["mean_test_score"]]
     plt_clear()
-    plt.plot(possible_k, grid_mean_scores)
+    plt.plot(possible_k, grid_mean_scores, marker="o")
     plt.title(f"KNN Grid Search for optimal K ({optimal_k})")
     plt.xlabel("K")
     plt.ylabel("Accuracy")
+    plt.grid(True)
     plt.savefig(fig_filename)
     plt_clear()
 
