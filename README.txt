@@ -19,7 +19,8 @@ There are two components: `main.py` and `plots.py`.
 
 This will run for somewhere on the order of 30-60 minutes depending on the hardware.
 All learners, hyperparameter grid search, and plotting all happens by running `main.py`.
-Plots are output to the `plots` directory. Various metrics are printed to the console.
+Plots are output to the `plots` directory. Various metrics are printed to the console and output to a log file named
+`output/main.log`.
 
 Since training takes a long time, some plotting is broken out into a separate `plots.py` file which uses output from a
 previous run of `main.py` to generate plots.

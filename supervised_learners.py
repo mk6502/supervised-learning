@@ -1,3 +1,4 @@
+import logging
 from sklearn.model_selection import GridSearchCV
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
@@ -10,13 +11,16 @@ import matplotlib.pyplot as plt
 from utils import plt_clear
 
 
+logger = logging.getLogger()
+
+
 def basic_metrics(y_test, y_pred):
     d = dict()
     d["acc"] = metrics.accuracy_score(y_test, y_pred)
     fpr, tpr, thresholds = metrics.roc_curve(y_test, y_pred)
     d["auc"] = metrics.auc(fpr, tpr)
-    print(f"Accuracy: {d['acc']}")
-    print(f"AUC: {d['auc']}")
+    logger.info(f"Accuracy: {d['acc']}")
+    logger.info(f"AUC: {d['auc']}")
     return d
 
 
@@ -30,9 +34,9 @@ def decision_tree_learner(X_train, y_train, X_test, y_test, max_depth=None):
 
     # Stats:
     if max_depth:
-        print(f"DT Learner with max_depth={max_depth}:")
+        logger.info(f"DT Learner with max_depth={max_depth}:")
     else:
-        print("DT Learning with no max_depth:")
+        logger.info("DT Learning with no max_depth:")
 
     metrics_dict = basic_metrics(y_test, y_pred)
 
@@ -50,7 +54,7 @@ def decision_tree_grid_search(X_train, y_train, X_test, y_test):
     grid.fit(X_train, y_train)
 
     optimal_max_depth = grid.best_params_["max_depth"]
-    print(f"Optimal max_depth={optimal_max_depth}")
+    logger.info(f"Optimal max_depth={optimal_max_depth}")
 
     return decision_tree_learner(X_train, y_train, X_test, y_test, max_depth=optimal_max_depth)
 
@@ -67,7 +71,7 @@ def neural_network_learner(X_train, y_train, X_test, y_test, random_state=123, a
     y_pred = nn.predict(X_test)
 
     # Stats:
-    print(f"NN Learner with activation={activation} and alpha={alpha}:")
+    logger.info(f"NN Learner with activation={activation} and alpha={alpha}:")
     metrics_dict = basic_metrics(y_test, y_pred)
 
     return nn, y_pred, metrics_dict
@@ -86,7 +90,7 @@ def neural_network_grid_search(X_train, y_train, X_test, y_test, random_state=12
 
     optimal_activation = grid.best_params_["activation"]
     optimal_alpha = grid.best_params_["alpha"]
-    print(f"Optimal activation={optimal_activation}, alpha={optimal_alpha}")
+    logger.info(f"Optimal activation={optimal_activation}, alpha={optimal_alpha}")
 
     return neural_network_learner(X_train, y_train, X_test, y_test, random_state=random_state, activation=optimal_activation, alpha=optimal_alpha)
 
@@ -100,7 +104,7 @@ def adaboost_learner(X_train, y_train, X_test, y_test, n_estimators=50, random_s
     y_pred = ada.predict(X_test)
 
     # Stats:
-    print(f"AdaBoost Learner with n_estimators={n_estimators}:")
+    logger.info(f"AdaBoost Learner with n_estimators={n_estimators}:")
     metrics_dict = basic_metrics(y_test, y_pred)
 
     return ada, y_pred, metrics_dict
@@ -117,7 +121,7 @@ def adaboost_grid_search(X_train, y_train, X_test, y_test, random_state=123):
     grid.fit(X_train, y_train)
 
     optimal_n_estimators = grid.best_params_["n_estimators"]
-    print(f"Optimal activation={optimal_n_estimators}")
+    logger.info(f"Optimal activation={optimal_n_estimators}")
 
     return adaboost_learner(X_train, y_train, X_test, y_test, random_state=random_state, n_estimators=optimal_n_estimators)
 
@@ -131,7 +135,7 @@ def svm_learner(X_train, y_train, X_test, y_test, kernel="rbf", random_state=123
     y_pred = svm.predict(X_test)
 
     # Stats:
-    print(f"SVM Learner with kernel={kernel}:")
+    logger.info(f"SVM Learner with kernel={kernel}:")
     metrics_dict = basic_metrics(y_test, y_pred)
 
     return svm, y_pred, metrics_dict
@@ -146,7 +150,7 @@ def knn_learner(X_train, y_train, X_test, y_test, n_neighbors=5):
     y_pred = knn.predict(X_test)
 
     # Stats:
-    print(f"KNN Learner with n_neighbors={n_neighbors}:")
+    logger.info(f"KNN Learner with n_neighbors={n_neighbors}:")
     metrics_dict = basic_metrics(y_test, y_pred)
 
     return knn, y_pred, metrics_dict
