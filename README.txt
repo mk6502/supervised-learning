@@ -3,7 +3,7 @@ mstaszel3
 
 # Code Location
 
-The code is available at: https://github.com/mk6502/supervised-learning.git
+The code is available at: https://github.com/mk6502/supervised-learning/
 
 # Usage
 
