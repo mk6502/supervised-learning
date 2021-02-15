@@ -36,7 +36,7 @@ def main():
         combined_metrics_dict = dict()  # all metrics for plotting this dataset
         for test_size in [0.1, 0.2]:
             combined_metrics_dict[test_size] = dict()  # 2-dimensional dict
-            print(f"===== Running for test_size={test_size}... =====")
+            print(f"===== {dataset} Running for test_size={test_size}... =====")
 
             # same train-test split for all learners:
             X_train, X_test, y_train, y_test = train_test_split(X_encoded, y, test_size=test_size, random_state=RANDOM_STATE)

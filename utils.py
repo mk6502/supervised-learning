@@ -43,7 +43,7 @@ def get_dataset(dataset_name):
 
 def plt_clear():
     """
-    Clears pyplots. Taken from my GATech CS 7646 code.
+    Clears plt. Taken from my GATech CS 7646 code.
     """
     plt.clf()
     plt.cla()
@@ -58,7 +58,7 @@ def accuracy_test_size_bar_chart(combined_metrics_dict, metrics_dict_name, test_
     plt_clear()
     fig, ax = plt.subplots()
     x = np.arange(2)
-    y_axis = [combined_metrics_dict[test_sizes[0]][metrics_dict_name]["acc"], combined_metrics_dict[test_sizes[1]][metrics_dict_name]["acc"]]
+    y_axis = [combined_metrics_dict[str(test_sizes[0])][metrics_dict_name]["acc"], combined_metrics_dict[str(test_sizes[1])][metrics_dict_name]["acc"]]
     plt.bar(test_sizes, y_axis)
     ax.set_xlabel("Test Ratio")
     ax.set_ylabel("Accuracy")
@@ -74,7 +74,7 @@ def accuracy_two_learners_bar_chart(combined_metrics_dict, test_size, metrics_di
     plt_clear()
     fig, ax = plt.subplots()
     x = [learner_name_1, learner_name_2]
-    y_axis = [combined_metrics_dict[test_size][metrics_dict_name_1]["acc"], combined_metrics_dict[test_size][metrics_dict_name_2]["acc"]]
+    y_axis = [combined_metrics_dict[str(test_size)][metrics_dict_name_1]["acc"], combined_metrics_dict[str(test_size)][metrics_dict_name_2]["acc"]]
     plt.bar(x, y_axis)
     ax.set_xlabel("Test Ratio")
     ax.set_ylabel("Accuracy")

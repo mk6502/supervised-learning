@@ -10,7 +10,7 @@ def make_beautiful_plots(dataset, combined_metrics_dict):
     Make plots used in the paper. `combined_metrics_dict` is for a single dataset.
     """
     test_sizes = list(combined_metrics_dict.keys())  # [0.1, 0.2]
-    test_size = 0.2  # only graph one of the test sizes, don't need both
+    test_size = str(0.2)  # only graph one of the test sizes, don't need both
 
     # Accuracy for both test_sizes for pruned decision tree:
     accuracy_test_size_bar_chart(combined_metrics_dict, "dtp_metrics_dict", test_sizes, "Pruned Decision Tree Accuracy with different test sizes", f"plots/{dataset}_dtp_test_size_acc.png")
@@ -55,7 +55,7 @@ def generate_plots():
     """
     for dataset in ["adult", "phishing"]:
         try:
-            with open(f"outputs/{dataset}_combined_metrics_dict.json") as f:
+            with open(f"output/{dataset}_combined_metrics_dict.json") as f:
                 combined_metrics_dict = json.load(f)
         except:
             raise Exception(f"Unable to load outputs/{dataset}_combined_metrics_dict.json - did you run main.py?")
