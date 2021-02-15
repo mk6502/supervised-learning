@@ -78,7 +78,7 @@ def accuracy_two_learners_bar_chart(combined_metrics_dict, test_size, metrics_di
 
     plt.bar(x, y)
 
-    ax.set_xlabel("Test Ratio")
+    ax.set_xlabel("Learner")
     ax.set_ylabel("Accuracy")
     ax.set_title(title)
     plt.savefig(filename)
