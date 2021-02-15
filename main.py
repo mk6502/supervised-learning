@@ -7,7 +7,7 @@ from sklearn.tree import plot_tree
 
 from utils import get_dataset, plt_clear
 from supervised_learners import decision_tree_learner, neural_network_learner, neural_network_grid_search, \
-    adaboost_learner, svm_learner, knn_learner, knn_grid_search
+    adaboost_learner, adaboost_grid_search, svm_learner, knn_learner, knn_grid_search
 
 
 RANDOM_STATE = 123
@@ -15,7 +15,7 @@ np.random.seed(RANDOM_STATE)
 
 
 def main():
-    for dataset in ["adult"]:
+    for dataset in ["adult", "phishing"]:
         print(f"running for dataset: {dataset}")
 
         df, X, y = get_dataset(dataset)
@@ -60,6 +60,11 @@ def main():
             adaboost_learner(X_train, y_train, X_test, y_test, random_state=RANDOM_STATE)
         print("====================\n")
 
+        # boosting grid search to find optimal n_estimator:
+        opt_ab, opt_ab_y_pred, opt_ab_acc, opt_ab_fpr, opt_ab_tpr, opt_ab_thresholds, opt_ab_auc, opt_ab_precision, opt_ab_recall, opt_ab_average_precision = \
+            adaboost_grid_search(X_train, y_train, X_test, y_test, random_state=RANDOM_STATE)
+        print("====================\n")
+
         # SVM (polynomial kernel):
         svm, svm_y_pred, svm_acc, svm_fpr, svm_tpr, svm_thresholds, svm_auc, svm_precision, svm_recall, svm_average_precision = \
             svm_learner(X_train, y_train, X_test, y_test, kernel="poly", random_state=RANDOM_STATE)
@@ -78,6 +83,7 @@ def main():
         # KNN search for optimal value of K:
         opt_knn, opt_knn_y_pred, opt_knn_acc, opt_knn_fpr, opt_knn_tpr, opt_knn_thresholds, opt_knn_auc, opt_knn_precision, opt_knn_recall, opt_knn_average_precision = \
             knn_grid_search(X_train, y_train, X_test, y_test, fig_filename=f"plots/{dataset}_knn_gridsearch.png")
+        print("====================\n")
 
     print("DONE!")
 

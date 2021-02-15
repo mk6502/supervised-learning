@@ -99,6 +99,22 @@ def adaboost_learner(X_train, y_train, X_test, y_test, n_estimators=1000, random
     return ada, y_pred, ada_acc, ada_fpr, ada_tpr, ada_thresholds, ada_auc, ada_precision, ada_recall, ada_average_precision
 
 
+def adaboost_grid_search(X_train, y_train, X_test, y_test, random_state=123):
+    # some code taken from: https://www.ritchieng.com/machine-learning-efficiently-search-tuning-param/
+    possible_n_estimators = [100, 1000, 10000]
+    param_grid = {"n_estimators": possible_n_estimators}
+
+    ada = AdaBoostClassifier(random_state=random_state)
+
+    grid = GridSearchCV(ada, param_grid, cv=10, scoring="accuracy")  # 10 folds
+    grid.fit(X_train, y_train)
+
+    optimal_n_estimators = grid.best_params_["n_estimators"]
+    print(f"Optimal activation={optimal_n_estimators}")
+
+    return adaboost_learner(X_train, y_train, X_test, y_test, random_state=random_state, n_estimators=optimal_n_estimators)
+
+
 def svm_learner(X_train, y_train, X_test, y_test, kernel="polynomial", random_state=123):
     # Fit to training data:
     svm = SVC(kernel=kernel, random_state=random_state)
