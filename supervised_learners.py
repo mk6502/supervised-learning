@@ -101,7 +101,7 @@ def adaboost_learner(X_train, y_train, X_test, y_test, n_estimators=1000, random
 
 def adaboost_grid_search(X_train, y_train, X_test, y_test, random_state=123):
     # some code taken from: https://www.ritchieng.com/machine-learning-efficiently-search-tuning-param/
-    possible_n_estimators = [100, 1000, 10000]
+    possible_n_estimators = [100, 250, 1000]
     param_grid = {"n_estimators": possible_n_estimators}
 
     ada = AdaBoostClassifier(random_state=random_state)
