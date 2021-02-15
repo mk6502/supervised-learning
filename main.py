@@ -54,11 +54,11 @@ def main():
             print()
 
             # export a mostly-useless plot to show complexity of the pruned tree:
-            print(f"===== exporting plots/{dataset}_{test_size}_dt_with_pruning.png... =====")
+            print(f"===== exporting output/plots/{dataset}_{test_size}_dt_with_pruning.png... =====")
             plt_clear()
             plt.figure(figsize=(30, 30))  # need a lot of room
             plot_tree(dtp, feature_names=df.columns)
-            plt.savefig(f"plots/{dataset}_{test_size}_dt_with_pruning.png")
+            plt.savefig(f"output/plots/{dataset}_{test_size}_dt_with_pruning.png")
             plt_clear()
             print()
 
@@ -81,9 +81,7 @@ def main():
             print()
 
             # neural network with max_iter=200:
-            print("===== Neural Network (max_iter=200)... =====")
-            combined_metrics_dict[test_size]["nn200_metrics_dict"] = nn_metrics_dict  # this is the default
-            print()
+            combined_metrics_dict[test_size]["nn200_metrics_dict"] = nn_metrics_dict  # NN default is 200
 
             # neural network with max_iter=500:
             print("===== Neural Network (max_iter=500)... =====")
@@ -110,9 +108,7 @@ def main():
             print()
 
             # AdaBoost with n_estimators=50:
-            print("===== AdaBoost (n_estimators=50)... =====")
-            combined_metrics_dict[test_size]["ab50_metrics_dict"] = ab_metrics_dict  # default is 50
-            print()
+            combined_metrics_dict[test_size]["ab50_metrics_dict"] = ab_metrics_dict  # AdaBoost default is 50
 
             # AdaBoost with n_estimators=100:
             print("===== AdaBoost (n_estimators=100)... =====")
@@ -133,21 +129,9 @@ def main():
             print()
 
             # SVM (default rbf kernel):
-            print("===== SVM (default rbf kernel)... =====")
+            print("===== SVM (default rbf kernel - no max_iter limit)... =====")
             svm, svm_y_pred, svm_metrics_dict = svm_learner(X_train, y_train, X_test, y_test, kernel="rbf", random_state=RANDOM_STATE)
             combined_metrics_dict[test_size]["svm_metrics_dict"] = svm_metrics_dict
-            print()
-
-            # SVM (default rbf kernel) with max_iter=10:
-            print("===== SVM (default rbf kernel and max_iter=10)... =====")
-            svm10, svm10_y_pred, svm10_metrics_dict = svm_learner(X_train, y_train, X_test, y_test, kernel="rbf", random_state=RANDOM_STATE, max_iter=10)
-            combined_metrics_dict[test_size]["svm10_metrics_dict"] = svm10_metrics_dict
-            print()
-
-            # SVM (default rbf kernel) with max_iter=10:
-            print("===== SVM (default rbf kernel and max_iter=20)... =====")
-            svm20, svm20_y_pred, svm20_metrics_dict = svm_learner(X_train, y_train, X_test, y_test, kernel="rbf", random_state=RANDOM_STATE, max_iter=20)
-            combined_metrics_dict[test_size]["svm20_metrics_dict"] = svm20_metrics_dict
             print()
 
             # SVM (default rbf kernel) with max_iter=50:
@@ -162,8 +146,20 @@ def main():
             combined_metrics_dict[test_size]["svm100_metrics_dict"] = svm100_metrics_dict
             print()
 
+            # SVM (default rbf kernel) with max_iter=200:
+            print("===== SVM (default rbf kernel and max_iter=200)... =====")
+            svm200, svm200_y_pred, svm200_metrics_dict = svm_learner(X_train, y_train, X_test, y_test, kernel="rbf", random_state=RANDOM_STATE, max_iter=200)
+            combined_metrics_dict[test_size]["svm200_metrics_dict"] = svm200_metrics_dict
+            print()
+
+            # SVM (default rbf kernel) with max_iter=500:
+            print("===== SVM (default rbf kernel and max_iter=500)... =====")
+            svm500, svm500_y_pred, svm500_metrics_dict = svm_learner(X_train, y_train, X_test, y_test, kernel="rbf", random_state=RANDOM_STATE, max_iter=500)
+            combined_metrics_dict[test_size]["svm500_metrics_dict"] = svm500_metrics_dict
+            print()
+
             # SVM (sigmoid kernel):
-            print("===== SVM (sigmoid kernel)... =====")
+            print("===== SVM (sigmoid kernel - no max_iter limit)... =====")
             svm_sigmoid, svm_sigmoid_y_pred, svm_sigmoid_metrics_dict = svm_learner(X_train, y_train, X_test, y_test, kernel="sigmoid", random_state=RANDOM_STATE)
             combined_metrics_dict[test_size]["svm_sigmoid_metrics_dict"] = svm_sigmoid_metrics_dict
             print()
@@ -176,7 +172,7 @@ def main():
 
             # KNN search for optimal value of K:
             print("===== KNN (grid search for K)... =====")
-            opt_knn, opt_knn_y_pred, opt_knn_metrics_dict = knn_grid_search(X_train, y_train, X_test, y_test, fig_filename=f"plots/{dataset}_{test_size}_knn_gridsearch.png")
+            opt_knn, opt_knn_y_pred, opt_knn_metrics_dict = knn_grid_search(X_train, y_train, X_test, y_test, fig_filename=f"output/plots/{dataset}_{test_size}_knn_gridsearch.png")
             combined_metrics_dict[test_size]["opt_knn_metrics_dict"] = opt_knn_metrics_dict
             print()
 
