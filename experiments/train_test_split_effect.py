@@ -25,12 +25,12 @@ def train_test_split_effect():
     output_dict = dict()
     for dataset in ["census", "phishing"]:
         output_dict[dataset] = dict()
-        logger.info(f"===== Running for dataset={dataset}... =====")
+        logger.info(f"=== Running for dataset={dataset}... ===")
         df, X, y = get_dataset(dataset)
 
         for test_size in [0.15, 0.25]:
             output_dict[dataset][test_size] = dict()
-            logger.info(f"===== Running for test_size={test_size}... =====")
+            logger.info(f"=== Running for test_size={test_size}... ===")
 
             # train-test split:
             X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=RANDOM_STATE)

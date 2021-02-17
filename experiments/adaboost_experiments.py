@@ -21,7 +21,7 @@ def adaboost_basics():
         df, X, y = get_dataset(dataset)
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=RANDOM_STATE)
 
-        logger.info(f"===== AdaBoost ({dataset})... =====")
+        logger.info(f"=== AdaBoost ({dataset})... ===")
         _, metrics_dict = adaboost_learner(X_train, y_train, X_test, y_test)
         output_dict[dataset] = metrics_dict
 
@@ -34,7 +34,7 @@ def adaboost_effect_of_n_estimators():
 
     Output for the paper are two plots (one per dataset) of n_estimators vs. accuracy.
     """
-    n_estimators = [50, 100, 200, 300, 400, 500]
+    n_estimators = [50, 100, 200, 300, 400, 500, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000]
     datasets = ["census", "phishing"]
     output_dict = dict()
 
@@ -45,7 +45,7 @@ def adaboost_effect_of_n_estimators():
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=RANDOM_STATE)
 
         for n in n_estimators:
-            logger.info(f"===== KNN ({dataset}, n_estimators={n})... =====")
+            logger.info(f"=== AdaBoost ({dataset}, n_estimators={n})... ===")
             _, metrics_dict = adaboost_learner(X_train, y_train, X_test, y_test, n_estimators=n)
             output_dict[dataset][n] = metrics_dict
 
@@ -54,4 +54,4 @@ def adaboost_effect_of_n_estimators():
     # plot:
     for dataset in datasets:
         y = [output_dict[dataset][x]["acc"] for x in n_estimators]
-        line_graph(n_estimators, y, "k", "Accuracy", f"{dataset.title()} - KNN - n_estimators vs. Accuracy", f"output/plots/{dataset}_adaboost_n_estimators_vs_acc.png")
+        line_graph(n_estimators, y, "n_estimators", "Accuracy", f"{dataset.title()} - AdaBoost - n_estimators vs. Accuracy", f"output/plots/{dataset}_adaboost_n_estimators_vs_acc.png")

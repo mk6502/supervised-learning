@@ -21,7 +21,7 @@ def dt_basics():
         df, X, y = get_dataset(dataset)
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=RANDOM_STATE)
 
-        logger.info(f"===== DT ({dataset})... =====")
+        logger.info(f"=== DT ({dataset})... ===")
         _, metrics_dict = decision_tree_learner(X_train, y_train, X_test, y_test)
         output_dict[dataset] = metrics_dict
 
@@ -45,7 +45,7 @@ def dt_effect_of_max_depth():
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=RANDOM_STATE)
 
         for max_depth in max_depths:
-            logger.info(f"===== DT ({dataset}, max_depth={max_depth})... =====")
+            logger.info(f"=== DT ({dataset}, max_depth={max_depth})... ===")
             _, metrics_dict = decision_tree_learner(X_train, y_train, X_test, y_test, max_depth=max_depth)
             output_dict[dataset][max_depth] = metrics_dict
 

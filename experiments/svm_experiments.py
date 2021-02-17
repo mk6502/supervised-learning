@@ -24,7 +24,7 @@ def svm_rbf_vs_sigmoid():
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=RANDOM_STATE)
 
         for kernel in ["rbf", "sigmoid"]:
-            logger.info(f"===== SVM ({dataset}, {kernel})... =====")
+            logger.info(f"=== SVM ({dataset}, {kernel})... ===")
             _, svm_metrics_dict = svm_learner(X_train, y_train, X_test, y_test, kernel=kernel, random_state=RANDOM_STATE)
             output_dict[dataset][kernel] = svm_metrics_dict["acc"]
 
@@ -38,7 +38,7 @@ def svm_effect_of_max_iter():
 
     Output for the paper are two plots (one per dataset) of max_iter vs. accuracy.
     """
-    max_iters = [50, 100, 200, 500, 750]
+    max_iters = [50, 100, 200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000]
     datasets = ["census", "phishing"]
     output_dict = dict()
 
@@ -49,7 +49,7 @@ def svm_effect_of_max_iter():
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=RANDOM_STATE)
 
         for max_iter in max_iters:
-            logger.info(f"===== SVM ({dataset}, max_iter={max_iter})... =====")
+            logger.info(f"=== SVM ({dataset}, max_iter={max_iter})... ===")
             _, metrics_dict = svm_learner(X_train, y_train, X_test, y_test, kernel="rbf", random_state=RANDOM_STATE, max_iter=max_iter)
             output_dict[dataset][max_iter] = metrics_dict
 

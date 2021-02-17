@@ -21,7 +21,7 @@ def nn_basics():
         df, X, y = get_dataset(dataset)
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=RANDOM_STATE)
 
-        logger.info(f"===== NN ({dataset})... =====")
+        logger.info(f"=== NN ({dataset})... ===")
         _, metrics_dict = neural_network_learner(X_train, y_train, X_test, y_test)
         output_dict[dataset] = metrics_dict
 
@@ -45,7 +45,7 @@ def nn_effect_of_max_iter():
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=RANDOM_STATE)
 
         for max_iter in max_iters:
-            logger.info(f"===== NN ({dataset}, max_iter={max_iter})... =====")
+            logger.info(f"=== NN ({dataset}, max_iter={max_iter})... ===")
             _, metrics_dict = neural_network_learner(X_train, y_train, X_test, y_test, random_state=RANDOM_STATE, max_iter=max_iter)
             output_dict[dataset][max_iter] = metrics_dict
 
@@ -72,7 +72,7 @@ def nn_grid_search_activation_and_alpha():
         df, X, y = get_dataset(dataset)
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=RANDOM_STATE)
 
-        logger.info(f"===== NN Grid Search ({dataset})... =====")
+        logger.info(f"=== NN Grid Search ({dataset})... ===")
         optimal_activation, optimal_alpha = neural_network_grid_search(X_train, y_train, X_test, y_test, RANDOM_STATE, possible_activation, possible_alpha)
         _, metrics_dict = neural_network_learner(X_train, y_train, X_test, y_test, random_state=RANDOM_STATE, activation=optimal_activation, alpha=optimal_alpha)
         output_dict[dataset] = {"optimal_alpha": optimal_alpha, "optimal_activation": optimal_activation, "acc": metrics_dict["acc"]}

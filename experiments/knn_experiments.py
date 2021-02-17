@@ -21,7 +21,7 @@ def knn_basics():
         df, X, y = get_dataset(dataset)
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=RANDOM_STATE)
 
-        logger.info(f"===== KNN ({dataset})... =====")
+        logger.info(f"=== KNN ({dataset})... ===")
         _, metrics_dict = knn_learner(X_train, y_train, X_test, y_test)
         output_dict[dataset] = metrics_dict
 
@@ -45,7 +45,7 @@ def knn_effect_of_k():
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=RANDOM_STATE)
 
         for k in ks:
-            logger.info(f"===== KNN ({dataset}, k={k})... =====")
+            logger.info(f"=== KNN ({dataset}, k={k})... ===")
             _, metrics_dict = knn_learner(X_train, y_train, X_test, y_test, n_neighbors=k)
             output_dict[dataset][k] = metrics_dict
 

@@ -27,7 +27,7 @@ def phishing_decision_tree_with_five_features():
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=RANDOM_STATE)
 
     # decision tree:
-    logger.info("===== phishing_decision_tree_with_five_features... =====")
+    logger.info("=== phishing_decision_tree_with_five_features... ===")
     dt, dt_metrics_dict = decision_tree_learner(X_train, y_train, X_test, y_test, max_depth=None)
 
     # write metrics to a file:
@@ -35,7 +35,7 @@ def phishing_decision_tree_with_five_features():
 
     # export a mostly-useless plot to show complexity of the pruned tree:
     filename = "output/plots/phishing_decision_tree_with_five_features.png"
-    logger.info(f"===== exporting {filename}... =====")
+    logger.info(f"=== exporting {filename}... ===")
     plt_clear()
     plt.figure(figsize=(30, 30))  # need a lot of room
     plot_tree(dt, feature_names=df.columns)
@@ -62,7 +62,7 @@ def phishing_decision_tree_with_ten_features():
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=RANDOM_STATE)
 
     # decision tree:
-    logger.info("===== phishing_decision_tree_with_ten_features... =====")
+    logger.info("=== phishing_decision_tree_with_ten_features... ===")
     dt, dt_metrics_dict = decision_tree_learner(X_train, y_train, X_test, y_test, max_depth=None)
 
     # write metrics to a file:
