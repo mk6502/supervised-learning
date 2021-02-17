@@ -1,7 +1,12 @@
-import math
-import numpy as np
+import logging
+import json
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import OrdinalEncoder
+from sklearn import metrics
+
+
+logger = logging.getLogger()
 
 
 def get_data_census():
@@ -17,7 +22,13 @@ def get_data_census():
     X = df.copy().drop(columns=[class_col])
     y = df.copy()[class_col]
     y = y.apply(lambda x: 1 if x == ">50K" else 0)  # turn y into 0 (<=50K) and 1 (>50K)
-    return df, X, y
+
+    # encode X into float for sklearn:
+    encoder_X = OrdinalEncoder()
+    encoder_X.fit(X)
+    X_encoded = encoder_X.transform(X)
+
+    return df, X_encoded, y
 
 
 def get_data_phishing():
@@ -42,6 +53,10 @@ def get_dataset(dataset_name):
         raise ValueError("unrecognized dataset")
 
 
+def basic_metrics(y_test, y_pred):
+    return {"acc": metrics.accuracy_score(y_test, y_pred)}
+
+
 def plt_clear():
     """
     Clears plt. Taken from my GATech CS 7646 code.
@@ -51,41 +66,7 @@ def plt_clear():
     plt.close()
 
 
-def accuracy_test_size_bar_chart(combined_metrics_dict, metrics_dict_name, test_sizes, title, filename):
-    """
-    Helper method to make bar charts of accuracy for test sizes.
-    Based on: https://matplotlib.org/3.1.1/gallery/ticks_and_spines/custom_ticker1.html#sphx-glr-gallery-ticks-and-spines-custom-ticker1-py
-    """
-    plt_clear()
-    fig, ax = plt.subplots()
-    y = [combined_metrics_dict[str(test_sizes[0])][metrics_dict_name]["acc"], combined_metrics_dict[str(test_sizes[1])][metrics_dict_name]["acc"]]
-    plt.bar(test_sizes, y)
-    ax.set_xlabel("Test Ratio")
-    ax.set_ylabel("Accuracy")
-    ax.set_title(title)
-    plt.savefig(filename)
-    plt_clear()
-
-
-def accuracy_two_learners_bar_chart(combined_metrics_dict, test_size, metrics_dict_name_1, metrics_dict_name_2, learner_name_1, learner_name_2, title, filename):
-    """
-    Helper method to make bar charts of accuracy between two learners.
-    """
-    plt_clear()
-    fig, ax = plt.subplots()
-    x = [learner_name_1, learner_name_2]
-    y = [combined_metrics_dict[str(test_size)][metrics_dict_name_1]["acc"], combined_metrics_dict[str(test_size)][metrics_dict_name_2]["acc"]]
-
-    plt.bar(x, y)
-
-    ax.set_xlabel("Learner")
-    ax.set_ylabel("Accuracy")
-    ax.set_title(title)
-    plt.savefig(filename)
-    plt_clear()
-
-
-def accuracy_vs_param_line_chart(x, y, x_label, y_label, title, filename):
+def line_graph(x, y, x_label, y_label, title, filename):
     """
     Helper method to make line charts.
     """
@@ -98,3 +79,8 @@ def accuracy_vs_param_line_chart(x, y, x_label, y_label, title, filename):
     plt.grid(True)
     plt.savefig(filename)
     plt_clear()
+
+
+def export_obj_to_json_file(o, filename):
+    with open(filename, "w+") as f:
+        json.dump(o, f, indent=4, sort_keys=True)
