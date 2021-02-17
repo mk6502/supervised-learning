@@ -1,7 +1,7 @@
 import logging
 import numpy as np
 from sklearn.model_selection import train_test_split
-from utils import get_dataset, export_obj_to_json_file, line_graph
+from utils import get_dataset, export_obj_to_json_file, line_graph, plot_tree_big
 from learners.dt import decision_tree_learner
 
 
@@ -22,7 +22,8 @@ def dt_basics():
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=RANDOM_STATE)
 
         logger.info(f"=== DT ({dataset})... ===")
-        _, metrics_dict = decision_tree_learner(X_train, y_train, X_test, y_test)
+        dt, metrics_dict = decision_tree_learner(X_train, y_train, X_test, y_test)
+        plot_tree_big(dt, df.columns, f"output/plots/{dataset}_dt_basics_tree.png")
         output_dict[dataset] = metrics_dict
 
     export_obj_to_json_file(output_dict, f"output/metrics/dt_basics.json")

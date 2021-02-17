@@ -1,10 +1,9 @@
 import logging
 import numpy as np
 from sklearn.model_selection import train_test_split
-from sklearn.tree import plot_tree
 import matplotlib.pyplot as plt
 from learners.dt import decision_tree_learner
-from utils import get_dataset, plt_clear, export_obj_to_json_file
+from utils import get_dataset, plt_clear, export_obj_to_json_file, plot_tree_big
 
 
 logger = logging.getLogger()
@@ -36,11 +35,7 @@ def phishing_decision_tree_with_five_features():
     # export a mostly-useless plot to show complexity of the pruned tree:
     filename = "output/plots/phishing_decision_tree_with_five_features.png"
     logger.info(f"=== exporting {filename}... ===")
-    plt_clear()
-    plt.figure(figsize=(30, 30))  # need a lot of room
-    plot_tree(dt, feature_names=df.columns)
-    plt.savefig(filename)
-    plt_clear()
+    plot_tree_big(dt, df.columns, filename)
 
 
 def phishing_decision_tree_with_ten_features():
@@ -73,6 +68,6 @@ def phishing_decision_tree_with_ten_features():
     logger.info(f"===== exporting {filename}... =====")
     plt_clear()
     plt.figure(figsize=(30, 30))  # need a lot of room
-    plot_tree(dt, feature_names=df.columns)
+    plot_tree_big(dt, df.columns, filename)
     plt.savefig(filename)
     plt_clear()

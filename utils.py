@@ -4,6 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn import metrics
+from sklearn.tree import plot_tree
 
 
 logger = logging.getLogger()
@@ -77,6 +78,17 @@ def line_graph(x, y, x_label, y_label, title, filename):
     ax.set_ylabel(y_label)
     ax.set_title(title)
     plt.grid(True)
+    plt.savefig(filename)
+    plt_clear()
+
+
+def plot_tree_big(dt, features, filename):
+    """
+    Plot a tree.
+    """
+    plt_clear()
+    plt.figure(figsize=(30, 30))  # need a lot of room
+    plot_tree(dt, feature_names=features)
     plt.savefig(filename)
     plt_clear()
 
