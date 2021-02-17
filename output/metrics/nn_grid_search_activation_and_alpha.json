@@ -1,0 +1,12 @@
+{
+    "census": {
+        "acc": 0.8021006080707573,
+        "optimal_activation": "logistic",
+        "optimal_alpha": 1e-05
+    },
+    "phishing": {
+        "acc": 0.9615558570782451,
+        "optimal_activation": "relu",
+        "optimal_alpha": 0.0001
+    }
+}
