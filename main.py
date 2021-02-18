@@ -11,6 +11,7 @@ from experiments.knn_experiments import knn_basics, knn_effect_of_k
 from experiments.nn_experiments import nn_grid_search_activation_and_alpha, nn_effect_of_max_iter, nn_basics
 from experiments.svm_experiments import svm_rbf_vs_sigmoid, svm_effect_of_max_iter
 from experiments.phishing_decision_tree_with_fewer_features import phishing_decision_tree_with_five_features, phishing_decision_tree_with_ten_features
+from experiments.phishing_knn_with_fewer_features import phishing_knn_with_five_features, phishing_knn_with_ten_features
 from experiments.train_test_split_effect import train_test_split_effect
 
 
@@ -37,6 +38,8 @@ def main():
     # KNN experiments:
     knn_basics()
     knn_effect_of_k()
+    phishing_knn_with_five_features()
+    phishing_knn_with_ten_features()
 
     # AdaBoost experiments:
     adaboost_basics()
